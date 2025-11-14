@@ -1,4 +1,3 @@
-# inference.py (LSTM-KF 版本)
 import os
 import json
 import torch
@@ -312,12 +311,10 @@ def save_single_frame_json(pred_coords_norm: np.ndarray, bbox_xyxy: List[float],
 # Main: 读取 14 帧 JSON -> 推理 -> 存单帧 JSON
 # ---------------------------
 if __name__ == "__main__":
-    # 配置：修改为你的路径
     json_path = "test_data/0_8_10_14.json"   # 输入：包含 14 帧（缺第10帧）的 JSON
     weights = "/home/liangguomin/.vscode-server/prediction/LSTM_KF_saved_model/20251015_101908/best_model.pth"   # 训练好的权重文件
     output = "pred_data/predicted_frame10_7.json"                  # 输出文件（包含 1 帧的 list）
 
-    # 若训练时使用了特定的模型超参（例如 num_points/hidden_size/ bidirectional），可显式提供：
     model_kwargs = None
     model, device = load_model_from_weights(weights_path=weights, device=None, model_kwargs=model_kwargs)
 
@@ -355,3 +352,4 @@ if __name__ == "__main__":
     save_single_frame_json(pred_norm, bbox_avg, pre_frames[-1], output, missing_index=missing_idx)
 
     print("Done.")
+
