@@ -2,36 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-"""
-model_lstm_kf.py
-
-LSTM-KF: 一个把 LSTM 与可微分 Kalman Filter（线性、每个关键点独立）结合的端到端模块。
-
-设计要点：
-- 每个关键点的状态为 [x, y, vx, vy]（归一化坐标与归一化速度，和 data_loader.py 保持一致）
-- LSTM 接收 (B, T, input_size) 时序输入并输出每个关键点的先验状态（x_pred）以及预测的过程噪声 Q_diag 和观测噪声 R_diag（以 log-scale 输出以保证正性）
-- Kalman 更新在批量/多关键点上矢量化执行：
-    先验: x_pred (B, K, 4)
-    P_pred: diag(exp(log_q)) -> (B, K, 4, 4)
-    R: diag(exp(log_r)) -> (B, K, 2, 2)
-    观测 z: (B, K, 2)
-    H: [[1,0,0,0],[0,1,0,0]]
-- forward(x, meas=None) 如果提供 meas（观测），返回后验（posterior）状态，否则返回先验。
-
-返回值（forward）:
-    字典包含至少以下键：
-      'x_prior' : (B, K, 4)
-      'x_post'  : (B, K, 4)  # 如果给出 meas
-      'coords_post' : (B, K*2)  # x,y 从后验提取并展平
-      'coords_prior': (B, K*2)  # 先验 x,y
-      'P_post'   : (B, K, 4, 4)  # 后验协方差
-      'Q_diag'   : (B, K, 4)    # 过程噪声对角
-      'R_diag'   : (B, K, 2)    # 观测噪声对角
-
-该模块保持可微分（使用 PyTorch 原语），适合端到端训练（例如在 train.py 中把 coords_post 与真实 coords 做 loss）。
-"""
-
-
 class LSTMKFNet(nn.Module):
     def __init__(self,
                  input_size=56,       # 28 个关键点 * 2
@@ -247,7 +217,7 @@ class LSTMKFNet(nn.Module):
 
 
 if __name__ == '__main__':
-    # 简单冒烟测试
+    
     B = 2
     T = 14
     K = 28
@@ -263,3 +233,4 @@ if __name__ == '__main__':
     print('P_post', out['P_post'].shape)  # (B,K,4,4)
     print('Q_diag', out['Q_diag'].shape)  # (B,K,4)
     print('R_diag', out['R_diag'].shape)  # (B,K,2)
+
