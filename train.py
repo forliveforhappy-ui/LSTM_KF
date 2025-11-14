@@ -1,4 +1,3 @@
-# train.py  -- 训练 LSTM-KF 的脚本
 import os
 import time
 import numpy as np
@@ -12,7 +11,7 @@ from tqdm import tqdm
 import datetime
 
 # -----------------------
-# 超参数设置（可根据需要调整）
+# 超参数设置
 # -----------------------
 DATA_DIR = 'dataset'
 BATCH_SIZE = 256
@@ -26,8 +25,8 @@ PRINT_EVERY = 20
 
 # Loss 权重
 W_COORD = 1.0      # 后验坐标损失权重（主要目标）
-W_VEL = 0.1        # 后验速度损失（可选，用于督促速度学习）
-W_Q_REG = 1e-3     # 对 predicted log-Q 的 L2 正则（避免过大）
+W_VEL = 0.1        # 后验速度损失
+W_Q_REG = 1e-3     # 对 predicted log-Q 的 L2 正则
 W_R_REG = 1e-3     # 对 predicted log-R 的 L2 正则
 
 # 模型超参数
@@ -223,3 +222,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
