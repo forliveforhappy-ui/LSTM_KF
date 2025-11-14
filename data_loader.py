@@ -1,4 +1,3 @@
-# data_loader.py  -- 支持 LSTM-KF 的数据格式（增加 target_state: [x,y,vx,vy]）
 import os
 import json
 import math
@@ -6,7 +5,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-# 需要预测的非手指关键点索引（去掉左右手指 11-30, 34-53）
+
 FILTER_IDX = [i for i in range(68) if not (11 <= i <= 30 or 34 <= i <= 53)]
 NUM_POINTS = len(FILTER_IDX)  # 28 by design
 
@@ -219,3 +218,4 @@ class KeypointDatasetForLSTMKF(Dataset):
         return (torch.from_numpy(input_seq), torch.from_numpy(target),
                 torch.from_numpy(target_offsets), torch.from_numpy(target_bbox),
                 torch.from_numpy(target_state))
+
